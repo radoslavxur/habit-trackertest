@@ -1,0 +1,683 @@
+
+:root {
+    /* Цветова палитра */
+    --bg: #fdfdfd;
+    --canvas: #ffffff;
+    --accent: #111111;
+    --accent-soft: #6366f1;
+    --accent-error: #ff3b30;
+    --text-main: #0a0a0a;
+    --text-muted: #8e8e93;
+    --border: #f0f0f2;
+    --dot-empty: #f2f2f7;
+    
+    /* Типография */
+    --font-main: 'Plus Jakarta Sans', sans-serif;
+    --font-serif: 'Playfair Display', serif;
+    
+    /* Анимации */
+    --transition: all 0.9s cubic-bezier(0.2, 1, 0.3, 1);
+    --radius-card: 28px;
+    --radius-btn: 12px;
+}
+
+/* DARK MODE - HIGH CONTRAST & PREMIUM FEEL */
+body.darkmode {
+    /* Основа */
+    --bg: #010101;              /* Почти чисто черно за безкрайна дълбочина */
+    --canvas: #010101;
+    --surface: #121214;         /* Карти - малко по-светли, за да се виждат */
+    
+    /* Акценти */
+    --accent: #ffffff;
+    --accent-soft: #5e5ce6;     /* Мощно синьо-лилаво за бутона */
+    --accent-success: #32d74b;  /* Ярко зелено за отметките */
+    --accent-error: #ff453a;    /* Неоново червено за изтриване */
+    
+    /* Текст */
+    --text-main: #ffffff;
+    --text-muted: #8e8e93;      /* Сиво, което се чете лесно на тъмно */
+    
+    /* Елементи */
+    --border: #2c2c2e;          /* Ясна граница между елементите */
+    --dot-empty: #2c2c2e;
+    --icon-bg: #1c1c1e;
+    --input-bg: #1c1c1e;  
+    
+    transition: 0.9s ease-in-out;/* Светъл инпут за лесна ориентация */
+    animation: fade-in 1.5s cubic-bezier(0.390, 0.575, 0.565, 1.000) both;
+}
+
+
+/* Специфични фиксове за видимост на бутоните в Dark Mode */
+body.darkmode .add-btn {
+    background: var(--accent-soft);
+    color: #b08f8f;
+    font-weight: 800;
+    box-shadow: 0 8px 20px rgba(94, 92, 230, 0.4); /* Силно синьо сияние */
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+body.darkmode .add-btn:hover {
+    background: #706df3; /* Още по-ярко при посочване */
+    transform: scale(1.05) translateY(-2px);
+    box-shadow: 0 12px 25px rgba(94, 92, 230, 0.5);
+}
+
+body.darkmode .input-capsule {
+    background: var(--input-bg);
+    border: 1px solid var(--border);
+    box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.8); /* Сянка, която го отделя от съдържанието */
+}
+
+body.darkmode input {
+    color: #ffffff;
+}
+
+body.darkmode input::placeholder {
+    color: #545456;
+}
+
+/* Чекбоксът в тъмен режим */
+body.darkmode .check-box.completed {
+    background: var(--accent-success);
+    border-color: var(--accent-success);
+    box-shadow: 0 0 15px rgba(50, 215, 75, 0.3);
+}
+
+/* Иконите в картите */
+body.darkmode .icon-box {
+    background: var(--bg);
+    border: 1px solid var(--border);
+}
+
+/* Календарът */
+body.darkmode .day-name {
+    color: #636366;
+}
+
+/* Правим заглавието на навика чисто бяло и силно */
+body.darkmode .title-group h3 {
+    color: #0e0909;
+    font-weight: 800;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+}
+
+/* Правим подзаглавието (серията от дни) една идея по-светло */
+body.darkmode .title-group p {
+    color: #a1a1aa; 
+}
+
+/* Ако иконата (емотиконата) е твърде тъмна, я осветяваме */
+body.darkmode .icon-box {
+    background: #1c1c1e;
+    font-size: 24px; /* Малко по-голяма икона */
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* 1. Глобални настройки */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+    background-color: var(--bg);
+    color: var(--text-main);
+    font-family: var(--font-main);
+    display: flex;
+    justify-content: center;
+    line-height: 1.5;
+    transition: 0.9s ease-in-out;
+    animation: fade-in 1.5s cubic-bezier(0.390, 0.575, 0.565, 1.000) both;
+}
+
+@keyframes fade-in {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+
+/* Основен контейнер */
+.app-canvas {
+    width: 100%;
+    max-width: 900px;
+    background: var(--canvas);
+    min-height: 100vh;
+    padding: 0 40px 150px; /* Долното разстояние е за фиксирания инпут */
+    position: relative;
+}
+
+/* 2. Header Секция */
+.header {
+    padding: 70px 0 50px;
+    border-bottom: 1px solid var(--border);
+}
+
+.header-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 35px;
+}
+
+.status-pill {
+    background: #f8f8fa;
+    color: var(--accent-soft);
+    font-size: 10px;
+    font-weight: 800;
+    padding: 7px 14px;
+    border-radius: 100px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+}
+
+.date {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-muted);
+}
+
+h1 {
+    font-size: 52px;
+    font-weight: 800;
+    letter-spacing: -2.5px;
+    line-height: 1;
+    margin-bottom: 12px;
+}
+
+.italic {
+    font-family: var(--font-serif);
+    font-weight: 400;
+    font-style: italic;
+    color: var(--accent-soft);
+}
+
+.subtitle {
+    font-size: 16px;
+    color: var(--text-muted);
+    margin-bottom: 40px;
+}
+
+/* Прогрес бар в хедъра */
+.stats-overview {
+    max-width: 320px;
+}
+
+.stat-item .label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    font-weight: 700;
+    color: var(--text-muted);
+    margin-bottom: 12px;
+    display: block;
+}
+
+.stat-row {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+}
+
+.stat-row .value {
+    font-size: 26px;
+    font-weight: 800;
+}
+
+.mini-progress {
+    flex: 1;
+    height: 4px;
+    background: #f2f2f7;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.mini-progress .fill {
+    height: 100%;
+    background: var(--accent-soft);
+    box-shadow: 0 0 10px rgba(99, 102, 241, 0.2);
+    transition: width 1.2s var(--transition);
+}
+
+/* 3. Списък с Навици */
+.rituals-section {
+    padding-top: 60px;
+}
+
+.section-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 35px;
+}
+
+.section-title h2 {
+    font-size: 22px;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+}
+
+.section-title .count {
+    font-size: 13px;
+    color: var(--text-muted);
+    font-weight: 600;
+}
+
+/* Решетка (Grid) */
+.ritual-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 25px;
+}
+
+/* 4. Карта на Навик */
+.ritual-card  {
+    background: #ffffff;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-card);
+    padding: 28px;
+    transition: var(--transition);
+    position: relative;
+    overflow: hidden;
+    animation: fadeInCard 1s ease-in;
+}
+@keyframes fadeInCard {
+    from { opacity: 0.6; }
+    to { opacity: 1; }
+}
+
+
+.ritual-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 25px 50px -15px rgba(0,0,0,0.06);
+    border-color: rgba(99, 102, 241, 0.1);
+}
+
+/* Горна част на картата */
+.card-head {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    margin-bottom: 30px;
+}
+
+.icon-box {
+    width: 52px;
+    height: 52px;
+    background: #f9f9fb;
+    border-radius: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+}
+
+.title-group h3 {
+    font-size: 17px;
+    font-weight: 700;
+    margin-bottom: 3px;
+}
+
+.title-group p {
+    font-size: 12px;
+    color: var(--text-muted);
+    font-weight: 600;
+}
+
+/* Група бутони (Action Group) */
+.action-group {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* Бутон за изтриване (X) */
+.delete-btn {
+    background: transparent;
+    border: none;
+    color: #d1d1d6;
+    font-size: 22px;
+    font-weight: 300;
+    cursor: pointer;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    transition: var(--transition);
+}
+
+.delete-btn:hover {
+    background: #fff5f5;
+    color: var(--accent-error);
+    transform: rotate(90deg);
+
+}
+
+/* Чекбокс (Готово) */
+.check-box {
+    width: 36px;
+    height: 36px;
+    border-radius: var(--radius-btn);
+    border: 2px solid #efeff4;
+    background: transparent;
+    cursor: pointer;
+    transition: var(--transition);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.check-box.completed {
+    background: var(--accent-soft);
+    border-color: var(--accent-soft);
+    box-shadow: 0 6px 15px rgba(99, 102, 241, 0.25);
+}
+
+.check-box.completed::after {
+    content: '✓';
+    color: white;
+    font-weight: 800;
+    font-size: 16px;
+}
+
+/* 5. Календарна Секция */
+.habit-calendar {
+    display: flex;
+    justify-content: space-between;
+    padding-top: 25px;
+    border-top: 1px solid #f9f9fb;
+}
+
+.day-col {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+}
+
+.day-name {
+    font-size: 10px;
+    font-weight: 800;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.dot {
+    width: 10px;
+    height: 10px;
+    background: var(--dot-empty);
+    border-radius: 50%;
+    transition: var(--transition);
+}
+
+.dot.filled {
+    background: var(--accent-soft);
+}
+
+.dot.active {
+    border: 2px solid var(--accent-soft);
+    background: transparent;
+    transform: scale(1.3);
+}
+
+/* 6. Долен панел за въвеждане */
+.action-bar {
+    position: fixed;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: calc(100% - 60px);
+    max-width: 550px;
+    z-index: 100;
+}
+
+.input-capsule {
+    background: white;
+    border-radius: 100px;
+    padding: 10px 10px 10px 30px;
+    display: flex;
+    align-items: center;
+    box-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.12);
+    border: 1px solid rgba(0,0,0,0.03);
+}
+
+input {
+    flex: 1;
+    border: none;
+    outline: none;
+    font-family: var(--font-main);
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--text-main);
+    background: transparent;
+}
+
+input::placeholder {
+    color: #b0b0b8;
+}
+
+.add-btn {
+    background: var(--accent);
+    color: white;
+    border: none;
+    padding: 15px 32px;
+    border-radius: 100px;
+    font-weight: 700;
+    font-size: 14px;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.add-btn:hover {
+    background: var(--accent-soft);
+    transform: scale(1.05);
+}
+
+/* 7. Анимации при зареждане */
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(15px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.ritual-card {
+    animation: fadeInUp 0.7s var(--transition) forwards;
+}
+
+/* 8. Адаптивност за Мобилни устройства */
+@media (max-width: 600px) {
+    .app-canvas {
+        padding: 0 20px 130px;
+    }
+    
+    h1 {
+        font-size: 40px;
+        letter-spacing: -1.5px;
+    }
+    
+    .header {
+        padding: 50px 0 40px;
+    }
+    
+    .ritual-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .action-bar {
+        width: calc(100% - 40px);
+        bottom: 25px;
+    }
+    
+    .delete-btn {
+        width: 40px;
+        height: 40px;
+    }
+}
+
+/* Utility classes */
+.hidden { display: none; }
+::selection { background: var(--accent-soft); color: white; }
+
+
+#theme-toggle {
+    height: 40px;
+    width: 40px;
+    padding: 0;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--bg);
+    border: 2px solid var(--accent);
+    position: fixed;
+    top: 10px;
+    right: 30px;
+    transition: 0.9s ease-in-out;
+}
+
+#theme-toggle svg {
+    fill: var(--text-muted);
+    transition: 0.9s ease-in-out;
+}
+
+#theme-toggle svg:last-child {
+    display: none;
+}
+
+.darkmode #theme-toggle svg:first-child {
+    display: none;
+    background-color: var(--accent);
+    transition: 0.9s ease-in-out;
+}
+
+.darkmode #theme-toggle svg:last-child {
+    display: block;
+    transition: 0.9s ease-in-out;
+}
+
+/* Базовият стил на квадратчето */
+.check-box {
+    width: 24px;
+    height: 24px;
+    border: 2px solid var(--border);
+    border-radius: 6px;
+    background: transparent;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+/* Стил, когато е ЦЪКНАТО (completed) */
+.check-box.completed {
+    
+    background: #32d74b; /* Ярко системно зелено */
+    border-color: #32d74b;
+    transform: scale(1.1); /* Леко "подскачане" при активиране */
+    box-shadow: 0 0 15px rgba(50, 215, 75, 0.4);
+    animation: smoothAppear 0.4s ease-out forwards;
+}
+
+@keyframes smoothAppear {
+    from {
+        border-color: #ccc; /* Стар цвят на бордера */
+        box-shadow: none;
+        transform: scale(0.95);
+    }
+    to {
+        border-color: #4CAF50; /* Нов цвят на бордера */
+        box-shadow: 0 0 10px rgba(76, 175, 80, 0.5); /* Твоят shadow */
+        transform: scale(1);
+    }
+}
+.ritual-card:has(.delete-btn:hover) {
+    border-color: var(--accent-error) ;
+    border-left: 10px solid var(--accent-error);
+    /* Опционално: добавяме лека червена сянка за по-добър визуален ефект */
+    box-shadow: 10px 10px 30px rgba(255, 58, 48, 0.729);
+}
+
+.ritual-card:has(.delete-btn:hover) .icon-box {
+    filter: blur(1px) opacity(0.7);
+    transition: 0.4s ease;
+}
+
+body.darkmode .ritual-card:has(.delete-btn:hover) {
+    border-color: var(--accent-error);
+    box-shadow: 0 0 40px rgb(255, 13, 0);
+}
+
+/* Добавяме малка бяла отметка вътре, когато е готово */
+.check-box.completed::after {
+    content: '✓';
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    animation: check-appear 0.4s ease-out;
+}
+
+/* Анимация за появяване на отметката */
+@keyframes check-appear {
+    0% { transform: scale(0); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+/* Ефект върху цялата карта, когато е завършена (по желание) */
+.ritual-card:has(.check-box.completed) {
+    transition: 1s ease;
+    border-left: 10px solid #32d74b;
+    opacity: 0.8; /* Леко избледняване, за да се фокусираш върху останалите */
+    box-shadow: #32d74b 10px 10px 10px;
+    border-top: 5px solid #32d74b ;/* Леко избледняване, за да се фокусираш върху останалите */
+}
+
+/* Празно кръгче */
+.dot {
+    width: 8px;
+    height: 8px;
+    background: var(--dot-empty);
+    border-radius: 50%;
+    transition: all 0.3s ease;
+}
+
+/* Изпълнено кръгче (минал ден) */
+.dot.filled {
+    background: var(--accent-soft); /* Твоето лилаво/синьо */
+    opacity: 0.6;
+}
+
+/* Активно кръгче (днес) */
+.dot.active {
+    background: transparent;
+    border: 2px solid var(--accent-soft);
+    transform: scale(1.2);
+}
+
+.fill {
+    transition: width 1s ease-in-out !important;
+    width: 0%;
+}
+
+@keyframes filling {
+    from { width: 0%; }
+    to { width: 100%; } /* Задължително добави % */
+}
+
+.value {
+    transition: all 0.4s ease;
+}
